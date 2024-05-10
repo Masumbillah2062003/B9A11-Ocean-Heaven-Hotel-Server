@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 5000
@@ -26,10 +26,28 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
+    const roomCollection = client.db('assignment11DB').collection('rooms')
+    const confirmCollection = client.db('assignment11DB').collection('bookings')
 
+    app.get("/rooms", async (req, res) => {
+      const query = await roomCollection.find().toArray()
+      res.send(query)
+    })
+    app.get("/rooms/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await roomCollection.findOne(query)
+      res.send(result)
+    })
+    app.post("/bookings", async (req, res) => {
+      const booking = req.body;
+      console.log(booking);
+      const result = await confirmCollection.insertOne(booking);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
@@ -40,9 +58,9 @@ run().catch(console.dir);
 
 
 
-app.get('/', (req, res)=> {
-    res.send('assignment-11 is running')
+app.get('/', (req, res) => {
+  res.send('assignment-11 is running')
 })
-app.listen(port, ()=>{
-    console.log(`assignment-11 server is running on port ${port}`)
+app.listen(port, () => {
+  console.log(`assignment-11 server is running on port ${port}`)
 })
