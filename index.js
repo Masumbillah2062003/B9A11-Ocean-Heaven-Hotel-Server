@@ -91,19 +91,7 @@ async function run() {
       res.send(result)
     })
 
-    app.put("/rooms/:id", async (req, res) => {
-      const id = req.params.id
-      const filter = { _id: new ObjectId(id) }
-      const updatedBooking = req.body
-      console.log(updatedBooking)
-      const updateDoc = {
-        $set: {
-          status: updatedBooking.status
-        },
-      };
-      const result = await roomCollection.updateOne(filter, updateDoc);
-      res.send(result)
-    })
+
 
 
 
