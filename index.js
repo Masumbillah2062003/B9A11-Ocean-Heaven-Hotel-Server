@@ -37,12 +37,12 @@ const logger = (req, res, next) => {
 const verifyToken = (req, res, next) => {
   const token = req?.cookies?.token;
   // console.log('token in the middleware : ', token)
-  if(!token){
-    return res.status(401).send({message: 'Unauthorized access'})
+  if (!token) {
+    return res.status(401).send({ message: 'Unauthorized access' })
   }
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if(err){
-      return res.status(401).send({message: 'Unauthorized access'})
+    if (err) {
+      return res.status(401).send({ message: 'Unauthorized access' })
     }
     req.user = decoded
     next()
@@ -93,7 +93,7 @@ async function run() {
 
 
 
-app.put("/rooms/:id", async (req, res) => {
+    app.put("/rooms/:id", async (req, res) => {
       const id = req.params.id
       const filter = { _id: new ObjectId(id) }
       const updatedBooking = req.body
@@ -119,12 +119,12 @@ app.put("/rooms/:id", async (req, res) => {
     //   const result = await confirmCollection.find(query).toArray()
     //   res.send(result)
     // })
-    app.get("/bookings",logger,verifyToken, async (req, res) => {
+    app.get("/bookings", logger, verifyToken, async (req, res) => {
       console.log(req.query.email);
       // console.log('cook cookies',req.cookies)
-      console.log('token owner',req.user)
-      if(req.user.email !== req.query.email){
-        return res.status(403).send({message: "Forbidden Access"})
+      console.log('token owner', req.user)
+      if (req.user.email !== req.query.email) {
+        return res.status(403).send({ message: "Forbidden Access" })
       }
       let query = {};
       if (req.query?.email) {
